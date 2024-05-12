@@ -85,15 +85,15 @@ def event(event_id):
         color = request.form.get('color')
         if color == '':
             err_msg = "Заполните поле 'цвет'"
-        file = request.form.get('file')  # TODO: бесполезный файл
+        file = request.form.get('file') 
         start = request.form.get('start')
-        if start == '':  # TODO: много траблов с временем
+        if start == '': 
             err_msg = "Заполните поле 'Дата и время начала'"
         start = get_date_for_event(start)
         if not start:
             err_msg = "Заполните дату 'начала' по формату 'гггг-мм-дд чч:мм'"
         end = request.form.get('end')
-        url = request.form.get('url')  # TODO: бесполезный ссылка
+        url = request.form.get('url')  
         if end == '':
             end = start
         else:
