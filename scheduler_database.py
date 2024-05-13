@@ -10,22 +10,21 @@ class EventKeys:
     title = "title"
     description = "description"
     color = "color"
-    file = "file"
     start = "start"
     end = "end"
     url = "url"
 
 
 class User:
-    def new_event(self, title: str, description: str, color: str, file: str, start: str, end: str, url: str):
-        self.user_events.new_event(title, description, color, file, start, end, url)
+    def new_event(self, title: str, description: str, color: str, start: str, end: str, url: str):
+        self.user_events.new_event(title, description, color, start, end, url)
 
     def del_event(self, event_id: int | str):
         self.user_events.del_event_by_id(event_id)
 
-    def update_event(self, event_id: int | str, title: str, description: str, color: str, file: str, start: str, end: str, url: str):
+    def update_event(self, event_id: int | str, title: str, description: str, color: str, start: str, end: str, url: str):
         self.user_events.del_event_by_id(event_id, id_not_exist_ok=False)
-        self.user_events.new_event(title, description, color, file, start, end, url)
+        self.user_events.new_event(title, description, color, start, end, url)
 
     @property
     def events(self) -> list[dict[str, str]]:
@@ -67,8 +66,6 @@ class Events:
                                                                                  key=EventKeys.description),
             EventKeys.color: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id,
                                                                            key=EventKeys.color),
-            EventKeys.file: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id,
-                                                                          key=EventKeys.file),
             EventKeys.start: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id,
                                                                            key=EventKeys.start),
             EventKeys.end: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id,
@@ -107,7 +104,6 @@ class Events:
             EventKeys.title: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id, key=EventKeys.title),
             EventKeys.description: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id, key=EventKeys.description),
             EventKeys.color: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id, key=EventKeys.color),
-            EventKeys.file: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id, key=EventKeys.file),
             EventKeys.start: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id, key=EventKeys.start),
             EventKeys.end: get_value_from_event_db_by_email_and_event_id(email=self.email, event_id=event_id, key=EventKeys.end),
             EventKeys.url: f"http://{backend.PROJECT_HOST}:{backend.PROJECT_PORT}/event/{event_id}",
@@ -124,8 +120,8 @@ class Events:
         cursor = connection.cursor()
         new_event_id = self.__get_free_event_id()
         cursor.execute(
-            f"INSERT INTO UserEvents ({EventKeys.user_email}, {EventKeys.event_id}, {EventKeys.title}, {EventKeys.description}, {EventKeys.color}, {EventKeys.file}, {EventKeys.start}, {EventKeys.end}, {EventKeys.url}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (self.email, new_event_id, title, description, color, file, start, end, url,)
+            f"INSERT INTO UserEvents ({EventKeys.user_email}, {EventKeys.event_id}, {EventKeys.title}, {EventKeys.description}, {EventKeys.color}, {EventKeys.start}, {EventKeys.end}, {EventKeys.url}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (self.email, new_event_id, title, description, color, start, end, url,)
         )
         connection.commit()
         connection.close()
@@ -155,7 +151,6 @@ init_cursor.execute(f'''CREATE TABLE IF NOT EXISTS UserEvents (
 {EventKeys.title} TEXT,
 {EventKeys.description} TEXT,
 {EventKeys.color} TEXT,
-{EventKeys.file} TEXT,
 {EventKeys.start} TEXT,
 {EventKeys.end} TEXT,
 {EventKeys.url} TEXT,
